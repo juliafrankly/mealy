@@ -7,8 +7,8 @@ const Stack = createNativeStackNavigator();
 export default function RootNavigator() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Hem" }} />
-            <Stack.Screen name="RecipeList" component={RecipeListScreen} options={{ title: "Recept" }} />
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Home" }} />
+            <Stack.Screen name="RecipeList" component={RecipeListScreen} options={{ title: "Recipes" }} />
         </Stack.Navigator>
     );
 }

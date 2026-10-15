@@ -3,12 +3,12 @@ import { View, Text, Button, StyleSheet } from "react-native";
 export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Välkommen till Receptappen</Text>
+            <Text style={styles.title}>Welcome to Mealy</Text>
             <Text style={styles.text}>
-                Hitta, spara och dela dina favoritrecept.
+                Discover, save and share your favorite recipes.
             </Text>
             <Button
-                title="Se recept"
+                title="Browse recipes"
                 onPress={() => navigation.navigate("RecipeList")}
             />
         </View>
