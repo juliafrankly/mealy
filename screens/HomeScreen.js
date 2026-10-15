@@ -1,0 +1,22 @@
+import { View, Text, Button, StyleSheet } from "react-native";
+
+export default function HomeScreen({ navigation }) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Välkommen till Receptappen</Text>
+            <Text style={styles.text}>
+                Hitta, spara och dela dina favoritrecept.
+            </Text>
+            <Button
+                title="Se recept"
+                onPress={() => navigation.navigate("RecipeList")}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: { flex: 1, justifyContent: "center", padding: 24 },
+    title: { fontSize: 28, fontWeight: "bold", marginBottom: 12 },
+    text: { fontSize: 16, marginBottom: 24 },
+});
