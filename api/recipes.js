@@ -1,0 +1,10 @@
+import { apiRequest } from "./client";
+
+export function getRecipes({ search, category } = {}) {
+    const params = [];
+    if (search) params.push(`search=${encodeURIComponent(search)}`);
+    if (category) params.push(`category=${encodeURIComponent(category)}`);
+    const query = params.length ? `?${params.join("&")}` : "";
+
+    return apiRequest(`/recipes${query}`);
+}
