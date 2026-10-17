@@ -17,9 +17,9 @@ function serverError(res, err) {
     res.status(500).json({ message: "Something went wrong. Please try again." });
 }
 
-// GET /api/recipes?search=pasta&category=Dinner
+// GET /api/recipes?search=pasta&category=Dinner&user_id=1&ids=1,2,3
 router.get("/", async (req, res) => {
-    const { search, category } = req.query;
+    const { search, category, user_id, ids } = req.query;
     const conditions = [];
     const values = [];
 
@@ -30,6 +30,23 @@ router.get("/", async (req, res) => {
     if (category) {
         values.push(category);
         conditions.push(`r.category = $${values.length}`);
+    }
+    if (user_id) {
+        const userId = Number(user_id);
+        if (!Number.isInteger(userId)) {
+            return res.status(400).json({ message: "Invalid user id." });
+        }
+        values.push(userId);
+        conditions.push(`r.user_id = $${values.length}`);
+    }
+    if (ids !== undefined) {
+        const idList = String(ids)
+            .split(",")
+            .filter(Boolean)
+            .map(Number)
+            .filter(Number.isInteger);
+        values.push(idList);
+        conditions.push(`r.id = ANY($${values.length}::int[])`);
     }
 
     const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
