@@ -8,3 +8,7 @@ export function getRecipes({ search, category } = {}) {
 
     return apiRequest(`/recipes${query}`);
 }
+
+export function getRecipe(id) {
+    return apiRequest(`/recipes/${id}`);
+}

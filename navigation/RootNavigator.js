@@ -1,3 +1,4 @@
+import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 import { ActivityIndicator, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
@@ -25,6 +26,7 @@ export default function RootNavigator() {
             {/* Public screens */}
             <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Home" }} />
             <Stack.Screen name="RecipeList" component={RecipeListScreen} options={{ title: "Recipes" }} />
+            <Stack.Screen name="RecipeDetails" component={RecipeDetailsScreen} options={{ title: "Recipe" }} />
 
             {token ? (
                 // Protected screens: only registered when logged in

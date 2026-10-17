@@ -15,7 +15,7 @@ import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import EmptyView from "../components/EmptyView";
 
-export default function RecipeListScreen() {
+export default function RecipeListScreen({ navigation }) {
     const [recipes, setRecipes] = useState([]);
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -59,13 +59,25 @@ export default function RecipeListScreen() {
     function renderContent() {
         if (loading) return <LoadingView />;
         if (error) {
-            return <ErrorView message={error} onRetry={() => setReloadKey((k) => k + 1)} />;
+            return (
+                <ErrorView
+                    message={error}
+                    onRetry={() => setReloadKey((k) => k + 1)}
+                />
+            );
         }
         return (
             <FlatList
                 data={recipes}
                 keyExtractor={(item) => String(item.id)}
-                renderItem={({ item }) => <RecipeCard recipe={item} />}
+                renderItem={({ item }) => (
+                    <RecipeCard
+                        recipe={item}
+                        onPress={() =>
+                            navigation.navigate("RecipeDetails", { id: item.id })
+                        }
+                    />
+                )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
                     <EmptyView
@@ -109,7 +121,9 @@ export default function RecipeListScreen() {
                                 accessibilityState={{ selected }}
                                 accessibilityLabel={`Category ${item ?? "All"}`}
                             >
-                                <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
+                                <Text
+                                    style={[styles.chipText, selected && styles.chipTextSelected]}
+                                >
                                     {item ?? "All"}
                                 </Text>
                             </Pressable>
