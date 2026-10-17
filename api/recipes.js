@@ -12,3 +12,7 @@ export function getRecipes({ search, category } = {}) {
 export function getRecipe(id) {
     return apiRequest(`/recipes/${id}`);
 }
+
+export function createRecipe(recipe, token) {
+    return apiRequest("/recipes", { method: "POST", body: recipe, token });
+}

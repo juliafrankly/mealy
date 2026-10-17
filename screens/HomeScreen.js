@@ -19,12 +19,20 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             {token ? (
-                <View style={styles.button}>
-                    <Button
-                        title="My profile"
-                        onPress={() => navigation.navigate("Profile")}
-                    />
-                </View>
+                <>
+                    <View style={styles.button}>
+                        <Button
+                            title="Create recipe"
+                            onPress={() => navigation.navigate("RecipeForm")}
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button
+                            title="My profile"
+                            onPress={() => navigation.navigate("Profile")}
+                        />
+                    </View>
+                </>
             ) : (
                 <>
                     <View style={styles.button}>

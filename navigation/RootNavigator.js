@@ -1,12 +1,13 @@
-import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 import { ActivityIndicator, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import HomeScreen from "../screens/HomeScreen";
 import RecipeListScreen from "../screens/RecipeListScreen";
+import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import RecipeFormScreen from "../screens/RecipeFormScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,10 @@ export default function RootNavigator() {
 
             {token ? (
                 // Protected screens: only registered when logged in
-                <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
+                <>
+                    <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
+                    <Stack.Screen name="RecipeForm" component={RecipeFormScreen} options={{ title: "New recipe" }} />
+                </>
             ) : (
                 // Only available when logged out
                 <>
