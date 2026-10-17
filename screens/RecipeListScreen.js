@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     View,
     Text,
@@ -23,6 +23,19 @@ export default function RecipeListScreen({ navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [reloadKey, setReloadKey] = useState(0);
+
+    // Reload the list when the user returns to this screen (e.g. after deleting)
+    const isFirstFocus = useRef(true);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            if (isFirstFocus.current) {
+                isFirstFocus.current = false;
+                return;
+            }
+            setReloadKey((k) => k + 1);
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     // Wait until the user stops typing before calling the API
     useEffect(() => {

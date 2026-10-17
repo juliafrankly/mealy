@@ -33,7 +33,9 @@ export default function RootNavigator() {
                 // Protected screens: only registered when logged in
                 <>
                     <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
-                    <Stack.Screen name="RecipeForm" component={RecipeFormScreen} options={{ title: "New recipe" }} />
+                    <Stack.Screen name="RecipeForm" component={RecipeFormScreen} options={({ route }) => ({
+                        title: route.params?.recipe ? "Edit recipe" : "New recipe",
+                    })} />
                 </>
             ) : (
                 // Only available when logged out

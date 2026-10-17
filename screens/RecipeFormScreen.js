@@ -12,17 +12,21 @@ import {
     Platform,
     StyleSheet,
 } from "react-native";
-import { createRecipe } from "../api/recipes";
+import { createRecipe, updateRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
 import { CATEGORIES } from "../constants/categories";
 
-export default function RecipeFormScreen({ navigation }) {
+export default function RecipeFormScreen({ navigation, route }) {
     const { token } = useAuth();
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState(null);
-    const [ingredients, setIngredients] = useState("");
-    const [instructions, setInstructions] = useState("");
+    // If a recipe is passed in, the form edits it. Otherwise it creates a new one.
+    const existing = route.params?.recipe;
+    const editing = Boolean(existing);
+
+    const [title, setTitle] = useState(existing?.title ?? "");
+    const [description, setDescription] = useState(existing?.description ?? "");
+    const [category, setCategory] = useState(existing?.category || null);
+    const [ingredients, setIngredients] = useState(existing?.ingredients ?? "");
+    const [instructions, setInstructions] = useState(existing?.instructions ?? "");
     const [error, setError] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
@@ -35,18 +39,36 @@ export default function RecipeFormScreen({ navigation }) {
         setError("");
         setSubmitting(true);
         try {
-            const created = await createRecipe(
-                {
-                    title: title.trim(),
-                    description: description.trim() || undefined,
-                    category: category || undefined,
-                    ingredients: ingredients.trim(),
-                    instructions: instructions.trim(),
-                },
-                token
-            );
-            Alert.alert("Recipe created", "Your recipe has been published.");
-            navigation.replace("RecipeDetails", { id: created.id });
+            if (editing) {
+                // Empty strings are sent on purpose so that a cleared
+                // description or category is actually cleared on the server.
+                await updateRecipe(
+                    existing.id,
+                    {
+                        title: title.trim(),
+                        description: description.trim(),
+                        category: category ?? "",
+                        ingredients: ingredients.trim(),
+                        instructions: instructions.trim(),
+                    },
+                    token
+                );
+                Alert.alert("Recipe updated", "Your changes have been saved.");
+                navigation.goBack();
+            } else {
+                const created = await createRecipe(
+                    {
+                        title: title.trim(),
+                        description: description.trim() || undefined,
+                        category: category || undefined,
+                        ingredients: ingredients.trim(),
+                        instructions: instructions.trim(),
+                    },
+                    token
+                );
+                Alert.alert("Recipe created", "Your recipe has been published.");
+                navigation.replace("RecipeDetails", { id: created.id });
+            }
         } catch (err) {
             console.error(err);
             setError(err.message);
@@ -134,7 +156,10 @@ export default function RecipeFormScreen({ navigation }) {
                 {submitting ? (
                     <ActivityIndicator size="large" />
                 ) : (
-                    <Button title="Create recipe" onPress={handleSubmit} />
+                    <Button
+                        title={editing ? "Save changes" : "Create recipe"}
+                        onPress={handleSubmit}
+                    />
                 )}
             </ScrollView>
         </KeyboardAvoidingView>

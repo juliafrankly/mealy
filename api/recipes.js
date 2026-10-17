@@ -16,3 +16,11 @@ export function getRecipe(id) {
 export function createRecipe(recipe, token) {
     return apiRequest("/recipes", { method: "POST", body: recipe, token });
 }
+
+export function updateRecipe(id, changes, token) {
+    return apiRequest(`/recipes/${id}`, { method: "PATCH", body: changes, token });
+}
+
+export function deleteRecipe(id, token) {
+    return apiRequest(`/recipes/${id}`, { method: "DELETE", token });
+}

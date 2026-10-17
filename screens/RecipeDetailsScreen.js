@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
     View,
     Text,
@@ -6,9 +6,12 @@ import {
     Button,
     Share,
     Alert,
+    ActivityIndicator,
     StyleSheet,
 } from "react-native";
-import { getRecipe } from "../api/recipes";
+import { useFocusEffect } from "@react-navigation/native";
+import { getRecipe, deleteRecipe } from "../api/recipes";
+import { useAuth } from "../context/AuthContext";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 
@@ -21,35 +24,46 @@ function splitIngredients(text) {
         .filter(Boolean);
 }
 
-export default function RecipeDetailsScreen({ route }) {
+export default function RecipeDetailsScreen({ route, navigation }) {
     const { id } = route.params;
+    const { token, user } = useAuth();
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [deleting, setDeleting] = useState(false);
     const [reloadKey, setReloadKey] = useState(0);
+    const hasLoaded = useRef(false);
 
-    useEffect(() => {
-        let cancelled = false;
+    // Runs every time the screen gets focus, so the recipe is refreshed
+    // when the user comes back from the edit form.
+    useFocusEffect(
+        useCallback(() => {
+            let cancelled = false;
 
-        async function loadRecipe() {
-            setLoading(true);
-            setError("");
-            try {
-                const data = await getRecipe(id);
-                if (!cancelled) setRecipe(data);
-            } catch (err) {
-                console.error(err);
-                if (!cancelled) setError(err.message);
-            } finally {
-                if (!cancelled) setLoading(false);
+            async function loadRecipe() {
+                // Only show the spinner the first time. Later refreshes happen silently.
+                if (!hasLoaded.current) setLoading(true);
+                setError("");
+                try {
+                    const data = await getRecipe(id);
+                    if (!cancelled) {
+                        setRecipe(data);
+                        hasLoaded.current = true;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    if (!cancelled && !hasLoaded.current) setError(err.message);
+                } finally {
+                    if (!cancelled) setLoading(false);
+                }
             }
-        }
 
-        loadRecipe();
-        return () => {
-            cancelled = true;
-        };
-    }, [id, reloadKey]);
+            loadRecipe();
+            return () => {
+                cancelled = true;
+            };
+        }, [id, reloadKey])
+    );
 
     const handleShare = async () => {
         try {
@@ -67,10 +81,38 @@ export default function RecipeDetailsScreen({ route }) {
         }
     };
 
+    const confirmDelete = async () => {
+        setDeleting(true);
+        try {
+            await deleteRecipe(id, token);
+            Alert.alert("Recipe deleted", "Your recipe has been removed.");
+            navigation.goBack();
+        } catch (err) {
+            console.error(err);
+            Alert.alert("Could not delete", err.message);
+            setDeleting(false);
+        }
+    };
+
+    const handleDelete = () => {
+        Alert.alert(
+            "Delete recipe",
+            "Are you sure you want to delete this recipe? This cannot be undone.",
+            [
+                { text: "Cancel", style: "cancel" },
+                { text: "Delete", style: "destructive", onPress: confirmDelete },
+            ]
+        );
+    };
+
     if (loading) return <LoadingView />;
     if (error) {
-        return <ErrorView message={error} onRetry={() => setReloadKey((k) => k + 1)} />;
+        return (
+            <ErrorView message={error} onRetry={() => setReloadKey((k) => k + 1)} />
+        );
     }
+
+    const isOwner = Boolean(token && user && recipe.user_id === user.id);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -103,6 +145,24 @@ export default function RecipeDetailsScreen({ route }) {
             <View style={styles.button}>
                 <Button title="Share recipe" onPress={handleShare} />
             </View>
+
+            {isOwner ? (
+                deleting ? (
+                    <ActivityIndicator size="large" style={styles.button} />
+                ) : (
+                    <>
+                        <View style={styles.button}>
+                            <Button
+                                title="Edit recipe"
+                                onPress={() => navigation.navigate("RecipeForm", { recipe })}
+                            />
+                        </View>
+                        <View style={styles.button}>
+                            <Button title="Delete recipe" color="#b00020" onPress={handleDelete} />
+                        </View>
+                    </>
+                )
+            ) : null}
         </ScrollView>
     );
 }
@@ -114,5 +174,5 @@ const styles = StyleSheet.create({
     description: { fontSize: 16, marginBottom: 8 },
     heading: { fontSize: 20, fontWeight: "bold", marginTop: 24, marginBottom: 8 },
     text: { fontSize: 16, lineHeight: 24, marginBottom: 4 },
-    button: { marginTop: 32 },
+    button: { marginTop: 16 },
 });
