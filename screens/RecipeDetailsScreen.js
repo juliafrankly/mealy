@@ -12,6 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { getRecipe, deleteRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
+import { useFavorites } from "../context/FavoritesContext";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 
@@ -27,6 +28,7 @@ function splitIngredients(text) {
 export default function RecipeDetailsScreen({ route, navigation }) {
     const { id } = route.params;
     const { token, user } = useAuth();
+    const { isFavorite, toggleFavorite } = useFavorites();
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -81,6 +83,16 @@ export default function RecipeDetailsScreen({ route, navigation }) {
         }
     };
 
+    const handleToggleFavorite = async () => {
+        const saved = await toggleFavorite(recipe.id);
+        if (!saved) {
+            Alert.alert(
+                "Could not update favorites",
+                "Something went wrong. Please try again."
+            );
+        }
+    };
+
     const confirmDelete = async () => {
         setDeleting(true);
         try {
@@ -113,6 +125,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
     }
 
     const isOwner = Boolean(token && user && recipe.user_id === user.id);
+    const favorite = isFavorite(recipe.id);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -141,6 +154,15 @@ export default function RecipeDetailsScreen({ route, navigation }) {
                 Instructions
             </Text>
             <Text style={styles.text}>{recipe.instructions}</Text>
+
+            {token ? (
+                <View style={styles.button}>
+                    <Button
+                        title={favorite ? "Remove from favorites" : "Save to favorites"}
+                        onPress={handleToggleFavorite}
+                    />
+                </View>
+            ) : null}
 
             <View style={styles.button}>
                 <Button title="Share recipe" onPress={handleShare} />

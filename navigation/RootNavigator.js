@@ -8,6 +8,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import RecipeFormScreen from "../screens/RecipeFormScreen";
+import RecipeCollectionScreen from "../screens/RecipeCollectionScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,9 +34,20 @@ export default function RootNavigator() {
                 // Protected screens: only registered when logged in
                 <>
                     <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
-                    <Stack.Screen name="RecipeForm" component={RecipeFormScreen} options={({ route }) => ({
-                        title: route.params?.recipe ? "Edit recipe" : "New recipe",
-                    })} />
+                    <Stack.Screen
+                        name="RecipeForm"
+                        component={RecipeFormScreen}
+                        options={({ route }) => ({
+                            title: route.params?.recipe ? "Edit recipe" : "New recipe",
+                        })}
+                    />
+                    <Stack.Screen
+                        name="RecipeCollection"
+                        component={RecipeCollectionScreen}
+                        options={({ route }) => ({
+                            title: route.params.type === "mine" ? "My recipes" : "Favorites",
+                        })}
+                    />
                 </>
             ) : (
                 // Only available when logged out
