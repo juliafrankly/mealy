@@ -1,14 +1,9 @@
 import { useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    ActivityIndicator,
-    StyleSheet,
-} from "react-native";
+import { Text, Button, ActivityIndicator, Alert, View, StyleSheet } from "react-native";
 import { register } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import ScreenContainer from "../components/ScreenContainer";
+import FormInput from "../components/FormInput";
 
 export default function RegisterScreen({ navigation }) {
     const { signIn } = useAuth();
@@ -28,6 +23,7 @@ export default function RegisterScreen({ navigation }) {
                 password
             );
             await signIn(token, user);
+            Alert.alert("Account created", `Welcome to Mealy, ${user.username}!`);
         } catch (err) {
             setError(err.message);
             setSubmitting(false);
@@ -35,35 +31,31 @@ export default function RegisterScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Create account</Text>
+        <ScreenContainer>
+            <Text style={styles.title} accessibilityRole="header">
+                Create account
+            </Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
+            <FormInput
+                label="Email"
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoComplete="email"
-                accessibilityLabel="Email"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
+            <FormInput
+                label="Username"
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize="none"
-                accessibilityLabel="Username"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password (min 6 characters)"
+            <FormInput
+                label="Password (min 6 characters)"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 autoCapitalize="none"
-                accessibilityLabel="Password"
             />
 
             {error ? (
@@ -73,7 +65,7 @@ export default function RegisterScreen({ navigation }) {
             ) : null}
 
             {submitting ? (
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" accessibilityLabel="Creating account" />
             ) : (
                 <Button title="Register" onPress={handleRegister} />
             )}
@@ -84,21 +76,12 @@ export default function RegisterScreen({ navigation }) {
                     onPress={() => navigation.navigate("Login")}
                 />
             </View>
-        </View>
+        </ScreenContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", padding: 24 },
     title: { fontSize: 28, fontWeight: "bold", marginBottom: 24 },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-        marginBottom: 12,
-    },
     error: { color: "#b00020", marginBottom: 12 },
     link: { marginTop: 16 },
 });

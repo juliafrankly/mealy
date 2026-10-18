@@ -1,5 +1,6 @@
 import { View, Text, Button, Alert, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
+import ScreenContainer from "../components/ScreenContainer";
 
 export default function ProfileScreen({ navigation }) {
     const { user, signOut } = useAuth();
@@ -15,8 +16,10 @@ export default function ProfileScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{user?.username}</Text>
+        <ScreenContainer>
+            <Text style={styles.title} accessibilityRole="header">
+                {user?.username}
+            </Text>
             <Text style={styles.text}>{user?.email}</Text>
 
             <View style={styles.button}>
@@ -36,12 +39,11 @@ export default function ProfileScreen({ navigation }) {
             <View style={styles.button}>
                 <Button title="Log out" color="#b00020" onPress={handleLogout} />
             </View>
-        </View>
+        </ScreenContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", padding: 24 },
     title: { fontSize: 28, fontWeight: "bold", marginBottom: 8 },
     text: { fontSize: 16, marginBottom: 24 },
     button: { marginBottom: 12 },

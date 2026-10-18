@@ -1,12 +1,15 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
+import ScreenContainer from "../components/ScreenContainer";
 
 export default function HomeScreen({ navigation }) {
     const { token } = useAuth();
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Welcome to Mealy</Text>
+        <ScreenContainer>
+            <Text style={styles.title} accessibilityRole="header">
+                Welcome to Mealy
+            </Text>
             <Text style={styles.text}>
                 Discover, save and share your favorite recipes.
             </Text>
@@ -43,12 +46,11 @@ export default function HomeScreen({ navigation }) {
                     </View>
                 </>
             )}
-        </View>
+        </ScreenContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", padding: 24 },
     title: { fontSize: 28, fontWeight: "bold", marginBottom: 12 },
     text: { fontSize: 16, marginBottom: 24 },
     button: { marginBottom: 12 },

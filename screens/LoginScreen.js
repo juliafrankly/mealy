@@ -1,14 +1,9 @@
 import { useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    ActivityIndicator,
-    StyleSheet,
-} from "react-native";
+import { Text, Button, ActivityIndicator, Alert, View, StyleSheet } from "react-native";
 import { login } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import ScreenContainer from "../components/ScreenContainer";
+import FormInput from "../components/FormInput";
 
 export default function LoginScreen({ navigation }) {
     const { signIn } = useAuth();
@@ -23,6 +18,7 @@ export default function LoginScreen({ navigation }) {
         try {
             const { token, user } = await login(email.trim(), password);
             await signIn(token, user);
+            Alert.alert("Logged in", `Welcome back, ${user.username}!`);
         } catch (err) {
             setError(err.message);
             setSubmitting(false);
@@ -30,27 +26,25 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Log in</Text>
+        <ScreenContainer>
+            <Text style={styles.title} accessibilityRole="header">
+                Log in
+            </Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
+            <FormInput
+                label="Email"
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoComplete="email"
-                accessibilityLabel="Email"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
+            <FormInput
+                label="Password"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 autoCapitalize="none"
-                accessibilityLabel="Password"
             />
 
             {error ? (
@@ -60,7 +54,7 @@ export default function LoginScreen({ navigation }) {
             ) : null}
 
             {submitting ? (
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" accessibilityLabel="Logging in" />
             ) : (
                 <Button title="Log in" onPress={handleLogin} />
             )}
@@ -71,21 +65,12 @@ export default function LoginScreen({ navigation }) {
                     onPress={() => navigation.navigate("Register")}
                 />
             </View>
-        </View>
+        </ScreenContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", padding: 24 },
     title: { fontSize: 28, fontWeight: "bold", marginBottom: 24 },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-        marginBottom: 12,
-    },
     error: { color: "#b00020", marginBottom: 12 },
     link: { marginTop: 16 },
 });
