@@ -92,6 +92,7 @@ export default function RecipeListScreen({ navigation }) {
                     />
                 )}
                 contentContainerStyle={styles.list}
+                keyboardShouldPersistTaps="handled"
                 ListEmptyComponent={
                     <EmptyView
                         message={
@@ -164,6 +165,8 @@ const styles = StyleSheet.create({
     },
     chips: { paddingHorizontal: 16, paddingBottom: 8 },
     chip: {
+        minHeight: 44,
+        justifyContent: "center",
         paddingHorizontal: 14,
         paddingVertical: 10,
         borderRadius: 20,

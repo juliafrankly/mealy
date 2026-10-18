@@ -181,6 +181,8 @@ const styles = StyleSheet.create({
     multiline: { minHeight: 120, textAlignVertical: "top" },
     chips: { flexDirection: "row", flexWrap: "wrap" },
     chip: {
+        minHeight: 44,
+        justifyContent: "center",
         paddingHorizontal: 14,
         paddingVertical: 10,
         borderRadius: 20,
