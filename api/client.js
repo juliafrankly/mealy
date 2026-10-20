@@ -7,6 +7,14 @@ export class ApiError extends Error {
     }
 }
 
+// AuthContext registers a function here that logs the user out
+// when the server says the token is no longer valid.
+let onUnauthorized = null;
+
+export function setUnauthorizedHandler(handler) {
+    onUnauthorized = handler;
+}
+
 export async function apiRequest(path, { method = "GET", body, token } = {}) {
     const headers = {};
     if (body) headers["Content-Type"] = "application/json";
@@ -37,6 +45,11 @@ export async function apiRequest(path, { method = "GET", body, token } = {}) {
     }
 
     if (!response.ok) {
+        // Only when a token was sent: a wrong password at login is also a 401,
+        // but that should show an error message, not log anyone out.
+        if (response.status === 401 && token && onUnauthorized) {
+            onUnauthorized();
+        }
         throw new ApiError(
             data?.message || "Something went wrong. Please try again.",
             response.status
