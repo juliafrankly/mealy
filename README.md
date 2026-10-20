@@ -96,6 +96,12 @@ Scan the QR code with Expo Go. The app finds the backend automatically, using th
 
 To try the app, register an account in the app, then create a recipe.
 
+Optional: add a demo user and a few recipes (log in with `demo@mealy.app` / `password123`):
+
+```bash
+npm run seed
+```
+
 ## Known issues and limitations
 
 - The backend must run on the same computer and network as Expo. `npx expo start --tunnel` does not work, since the app cannot reach the backend through the tunnel.
