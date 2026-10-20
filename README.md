@@ -28,6 +28,7 @@ The app talks to its own REST API, included in the `backend/` folder. It is buil
 - Register, log in and log out
 - Recipe list with search and category filter
 - Recipe details with ingredients and instructions
+- Recipe images are shown when a recipe has an image link, with a placeholder otherwise
 - Create, edit and delete your own recipes
 - Favorites and a profile with "My recipes"
 - Share a recipe with other apps
@@ -35,6 +36,7 @@ The app talks to its own REST API, included in the `backend/` folder. It is buil
 - Layout that adapts to different screen sizes, with accessibility labels
 - Favorites are saved on the server and updated optimistically: the UI changes immediately and the change is undone if the server request fails
 - The user is logged out automatically when the token has expired
+
 
 ## Registration and login
 
@@ -90,11 +92,12 @@ psql -U postgres -d mealy -f schema.sql
 
 If `psql` cannot connect, add `-h localhost` to the commands.
 
-Optional: add a demo user and a few recipes. You can then log in with `demo@mealy.app` / `password123`:
+For a more fulfilling experience, add complete recipes including pictures:
 
 ```bash
 npm run seed
 ```
+Optional: Log in to the demo-user with `demo@mealy.app` / `password123`
 
 Start the server and keep it running:
 
@@ -124,3 +127,4 @@ To try the app, log in with the demo user or register a new account, then create
 - Ingredients are stored as plain text, one per line.
 - The app needs the server to show recipes. Only the favorite ids are cached locally, not the recipes themselves, so there is no offline mode.
 - Tested with Expo Go on a Google Pixel 9 Pro. Not tested on web.
+- Images cannot be uploaded in the app. Only the demo recipes can have images, set with `image_url` in `backend/seed.js`.

@@ -4,5 +4,5 @@ export const CATEGORIES = [
     "Dinner",
     "Sides",
     "Dessert",
-    "Snacks"
+    "Snacks",
 ];

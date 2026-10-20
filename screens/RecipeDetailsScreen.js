@@ -15,6 +15,7 @@ import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
+import RecipeImage from "../components/RecipeImage";
 
 // Ingredients are stored as one text field. Split on new lines or on commas if the text is a single line.
 function splitIngredients(text) {
@@ -127,6 +128,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <RecipeImage uri={recipe.image_url} height={220} style={styles.image} />
             <Text style={styles.title} accessibilityRole="header">
                 {recipe.title}
             </Text>
@@ -195,4 +197,5 @@ const styles = StyleSheet.create({
     heading: { fontSize: 20, fontWeight: "bold", marginTop: 24, marginBottom: 8 },
     text: { fontSize: 16, lineHeight: 24, marginBottom: 4 },
     button: { marginTop: 16 },
+    image: { borderRadius: 12, marginBottom: 16, overflow: "hidden" },
 });
