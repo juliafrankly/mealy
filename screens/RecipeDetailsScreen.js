@@ -84,12 +84,10 @@ export default function RecipeDetailsScreen({ route, navigation }) {
     };
 
     const handleToggleFavorite = async () => {
-        const saved = await toggleFavorite(recipe.id);
-        if (!saved) {
-            Alert.alert(
-                "Could not update favorites",
-                "Something went wrong. Please try again."
-            );
+        const failure = await toggleFavorite(recipe.id);
+        // A 401 is already handled globally (the user is logged out with a message)
+        if (failure && failure.status !== 401) {
+            Alert.alert("Could not update favorites", failure.message);
         }
     };
 
@@ -101,7 +99,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
             navigation.goBack();
         } catch (err) {
             console.error(err);
-            Alert.alert("Could not delete", err.message);
+            if (err.status !== 401) Alert.alert("Could not delete", err.message);
             setDeleting(false);
         }
     };
