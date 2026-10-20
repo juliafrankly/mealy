@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../db");
 const requireAuth = require("../middleware/auth");
+const { serverError, parseId } = require("../utils/http");
 
 const router = express.Router();
 
@@ -11,11 +12,6 @@ const SELECT_RECIPE = `
   FROM recipes r
   JOIN users u ON u.id = r.user_id
 `;
-
-function serverError(res, err) {
-    console.error(err);
-    res.status(500).json({ message: "Something went wrong. Please try again." });
-}
 
 // GET /api/recipes?search=pasta&category=Dinner&user_id=1&ids=1,2,3
 router.get("/", async (req, res) => {
@@ -64,10 +60,8 @@ router.get("/", async (req, res) => {
 
 // GET /api/recipes/:id
 router.get("/:id", async (req, res) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
-        return res.status(400).json({ message: "Invalid recipe id." });
-    }
+    const id = parseId(req, res);
+    if (id === null) return;
 
     try {
         const result = await pool.query(`${SELECT_RECIPE} WHERE r.id = $1`, [id]);
@@ -83,7 +77,7 @@ router.get("/:id", async (req, res) => {
 // POST /api/recipes (requires token)
 router.post("/", requireAuth, async (req, res) => {
     const { title, description, ingredients, instructions, category, image_url } =
-        req.body;
+        req.body || {};
 
     if (!title || !ingredients || !instructions) {
         return res
@@ -110,13 +104,11 @@ router.post("/", requireAuth, async (req, res) => {
 
 // PATCH /api/recipes/:id (requires token, owner only)
 router.patch("/:id", requireAuth, async (req, res) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
-        return res.status(400).json({ message: "Invalid recipe id." });
-    }
+    const id = parseId(req, res);
+    if (id === null) return;
 
     const { title, description, ingredients, instructions, category, image_url } =
-        req.body;
+        req.body || {};
 
     try {
         const existing = await pool.query(
@@ -153,10 +145,8 @@ router.patch("/:id", requireAuth, async (req, res) => {
 
 // DELETE /api/recipes/:id (requires token, owner only)
 router.delete("/:id", requireAuth, async (req, res) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
-        return res.status(400).json({ message: "Invalid recipe id." });
-    }
+    const id = parseId(req, res);
+    if (id === null) return;
 
     try {
         const existing = await pool.query(

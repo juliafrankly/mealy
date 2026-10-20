@@ -1,22 +1,9 @@
 const express = require("express");
 const pool = require("../db");
 const requireAuth = require("../middleware/auth");
+const { serverError, parseId } = require("../utils/http");
 
 const router = express.Router();
-
-function serverError(res, err) {
-    console.error(err);
-    res.status(500).json({ message: "Something went wrong. Please try again." });
-}
-
-function parseRecipeId(req, res) {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
-        res.status(400).json({ message: "Invalid recipe id." });
-        return null;
-    }
-    return id;
-}
 
 // GET /api/favorites -> ids of the logged-in user's favorites, e.g. [12, 7, 3]
 router.get("/favorites", requireAuth, async (req, res) => {
@@ -33,7 +20,7 @@ router.get("/favorites", requireAuth, async (req, res) => {
 
 // PUT /api/recipes/:id/favorite -> save as favorite (safe to repeat)
 router.put("/recipes/:id/favorite", requireAuth, async (req, res) => {
-    const id = parseRecipeId(req, res);
+    const id = parseId(req, res);
     if (id === null) return;
 
     try {
@@ -55,7 +42,7 @@ router.put("/recipes/:id/favorite", requireAuth, async (req, res) => {
 
 // DELETE /api/recipes/:id/favorite -> remove favorite (safe to repeat)
 router.delete("/recipes/:id/favorite", requireAuth, async (req, res) => {
-    const id = parseRecipeId(req, res);
+    const id = parseId(req, res);
     if (id === null) return;
 
     try {

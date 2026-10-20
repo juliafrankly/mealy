@@ -12,7 +12,8 @@ module.exports = function requireAuth(req, res, next) {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         req.userId = payload.id;
         next();
-    } catch {
+    } catch (err) {
+        console.error("JWT error:", err.message);
         res.status(401).json({ message: "Your session has expired. Please log in again." });
     }
 };
