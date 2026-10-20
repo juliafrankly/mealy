@@ -1,5 +1,6 @@
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import RecipeImage from "./RecipeImage";
+import COLORS from "../constants/colors";
 
 export default function RecipeCard({ recipe, onPress }) {
     return (
@@ -28,16 +29,21 @@ export default function RecipeCard({ recipe, onPress }) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        marginBottom: 12,
+        backgroundColor: COLORS.surface,
+        borderRadius: 20,
+        marginBottom: 16,
         borderWidth: 1,
-        borderColor: "#e5e5e5",
+        borderColor: COLORS.border,
         overflow: "hidden",
+        shadowColor: COLORS.text,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+        elevation: 2,
     },
-    pressed: { opacity: 0.7 },
-    content: { padding: 16 },
-    title: { fontSize: 18, fontWeight: "bold", marginBottom: 4 },
-    meta: { fontSize: 14, color: "#666", marginBottom: 8 },
-    description: { fontSize: 15, color: "#333" },
+    pressed: { opacity: 0.88 },
+    content: { paddingHorizontal: 18, paddingVertical: 16 },
+    title: { fontSize: 19, lineHeight: 25, fontWeight: "700", color: COLORS.text, marginBottom: 5 },
+    meta: { fontSize: 14, lineHeight: 20, color: COLORS.muted, marginBottom: 9 },
+    description: { fontSize: 15, lineHeight: 22, color: COLORS.text },
 });

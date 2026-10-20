@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Image, View, Text, StyleSheet } from "react-native";
+import COLORS from "../constants/colors";
 
 export default function RecipeImage({ uri, height = 140, style }) {
     const [failed, setFailed] = useState(false);
@@ -31,9 +32,9 @@ export default function RecipeImage({ uri, height = 140, style }) {
 const styles = StyleSheet.create({
     placeholder: {
         width: "100%",
-        backgroundColor: "#eee",
+        backgroundColor: COLORS.imagePlaceholder,
         justifyContent: "center",
         alignItems: "center",
     },
-    icon: { fontSize: 36 },
+    icon: { fontSize: 38 },
 });

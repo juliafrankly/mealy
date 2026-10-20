@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
+import COLORS from "../constants/colors";
 
 export default function EmptyView({ message }) {
     return (
@@ -9,6 +10,12 @@ export default function EmptyView({ message }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-    text: { fontSize: 16, color: "#555", textAlign: "center" },
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 32,
+        paddingVertical: 48,
+    },
+    text: { fontSize: 16, lineHeight: 24, color: COLORS.muted, textAlign: "center" },
 });

@@ -8,6 +8,7 @@ import RecipeCard from "../components/RecipeCard";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import EmptyView from "../components/EmptyView";
+import COLORS from "../constants/colors";
 
 const EMPTY_MESSAGES = {
     mine: "You haven't created any recipes yet.",
@@ -86,6 +87,6 @@ export default function RecipeCollectionScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#f7f7f7" },
-    list: { padding: 16, flexGrow: 1 },
+    container: { flex: 1, backgroundColor: COLORS.background },
+    list: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 24, flexGrow: 1 },
 });

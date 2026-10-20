@@ -1,6 +1,8 @@
-import { View, Text, Button, Alert, StyleSheet } from "react-native";
+import { View, Text, Alert, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import ScreenContainer from "../components/ScreenContainer";
+import ActionButton from "../components/ActionButton";
+import COLORS from "../constants/colors";
 
 export default function ProfileScreen({ navigation }) {
     const { user, signOut } = useAuth();
@@ -23,28 +25,39 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.text}>{user?.email}</Text>
 
             <View style={styles.button}>
-                <Button
+                <ActionButton
                     title="My recipes"
                     onPress={() => navigation.navigate("RecipeCollection", { type: "mine" })}
                 />
             </View>
             <View style={styles.button}>
-                <Button
+                <ActionButton
                     title="Favorites"
                     onPress={() =>
                         navigation.navigate("RecipeCollection", { type: "favorites" })
                     }
+                    variant="secondary"
                 />
             </View>
             <View style={styles.button}>
-                <Button title="Log out" color="#b00020" onPress={handleLogout} />
+                <ActionButton
+                    title="Log out"
+                    onPress={handleLogout}
+                    variant="danger"
+                />
             </View>
         </ScreenContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    title: { fontSize: 28, fontWeight: "bold", marginBottom: 8 },
-    text: { fontSize: 16, marginBottom: 24 },
-    button: { marginBottom: 12 },
+    title: {
+        fontSize: 30,
+        lineHeight: 37,
+        fontWeight: "800",
+        color: COLORS.primaryDark,
+        marginBottom: 8,
+    },
+    text: { fontSize: 16, lineHeight: 24, color: COLORS.muted, marginBottom: 28 },
+    button: { marginBottom: 12, minHeight: 44, justifyContent: "center" },
 });

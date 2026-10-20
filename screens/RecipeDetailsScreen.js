@@ -3,7 +3,6 @@ import {
     View,
     Text,
     ScrollView,
-    Button,
     Share,
     Alert,
     ActivityIndicator,
@@ -16,6 +15,8 @@ import { useFavorites } from "../context/FavoritesContext";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import RecipeImage from "../components/RecipeImage";
+import ActionButton from "../components/ActionButton";
+import COLORS from "../constants/colors";
 
 // Ingredients are stored as one text field. Split on new lines or on commas if the text is a single line.
 function splitIngredients(text) {
@@ -157,7 +158,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
 
             {token ? (
                 <View style={styles.button}>
-                    <Button
+                    <ActionButton
                         title={favorite ? "Remove from favorites" : "Save to favorites"}
                         onPress={handleToggleFavorite}
                     />
@@ -165,7 +166,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
             ) : null}
 
             <View style={styles.button}>
-                <Button title="Share recipe" onPress={handleShare} />
+                <ActionButton title="Share recipe" onPress={handleShare} />
             </View>
 
             {isOwner ? (
@@ -174,13 +175,18 @@ export default function RecipeDetailsScreen({ route, navigation }) {
                 ) : (
                     <>
                         <View style={styles.button}>
-                            <Button
+                            <ActionButton
                                 title="Edit recipe"
                                 onPress={() => navigation.navigate("RecipeForm", { recipe })}
+                                variant="secondary"
                             />
                         </View>
                         <View style={styles.button}>
-                            <Button title="Delete recipe" color="#b00020" onPress={handleDelete} />
+                            <ActionButton
+                                title="Delete recipe"
+                                onPress={handleDelete}
+                                variant="danger"
+                            />
                         </View>
                     </>
                 )
@@ -190,12 +196,41 @@ export default function RecipeDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { padding: 24 },
-    title: { fontSize: 28, fontWeight: "bold", marginBottom: 4 },
-    meta: { fontSize: 14, color: "#666", marginBottom: 16 },
-    description: { fontSize: 16, marginBottom: 8 },
-    heading: { fontSize: 20, fontWeight: "bold", marginTop: 24, marginBottom: 8 },
-    text: { fontSize: 16, lineHeight: 24, marginBottom: 4 },
-    button: { marginTop: 16 },
-    image: { borderRadius: 12, marginBottom: 16, overflow: "hidden" },
+    container: {
+        flexGrow: 1,
+        paddingHorizontal: 20,
+        paddingTop: 18,
+        paddingBottom: 36,
+        backgroundColor: COLORS.background,
+    },
+    title: {
+        fontSize: 30,
+        lineHeight: 37,
+        fontWeight: "800",
+        color: COLORS.text,
+        marginBottom: 5,
+    },
+    meta: { fontSize: 14, lineHeight: 20, color: COLORS.muted, marginBottom: 18 },
+    description: {
+        fontSize: 16,
+        lineHeight: 25,
+        color: COLORS.text,
+        marginBottom: 8,
+    },
+    heading: {
+        fontSize: 21,
+        lineHeight: 28,
+        fontWeight: "700",
+        color: COLORS.primaryDark,
+        marginTop: 24,
+        marginBottom: 10,
+    },
+    text: { fontSize: 16, lineHeight: 25, color: COLORS.text, marginBottom: 6 },
+    button: { marginTop: 16, minHeight: 44, justifyContent: "center" },
+    image: {
+        borderRadius: 22,
+        marginBottom: 20,
+        overflow: "hidden",
+        backgroundColor: COLORS.imagePlaceholder,
+    },
 });

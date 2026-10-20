@@ -1,6 +1,8 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import ScreenContainer from "../components/ScreenContainer";
+import ActionButton from "../components/ActionButton";
+import COLORS from "../constants/colors";
 
 export default function HomeScreen({ navigation }) {
     const { token } = useAuth();
@@ -15,7 +17,7 @@ export default function HomeScreen({ navigation }) {
             </Text>
 
             <View style={styles.button}>
-                <Button
+                <ActionButton
                     title="Browse recipes"
                     onPress={() => navigation.navigate("RecipeList")}
                 />
@@ -24,25 +26,34 @@ export default function HomeScreen({ navigation }) {
             {token ? (
                 <>
                     <View style={styles.button}>
-                        <Button
+                        <ActionButton
                             title="Create recipe"
                             onPress={() => navigation.navigate("RecipeForm")}
                         />
                     </View>
                     <View style={styles.button}>
-                        <Button
+                        <ActionButton
                             title="My profile"
                             onPress={() => navigation.navigate("Profile")}
+                            variant="secondary"
                         />
                     </View>
                 </>
             ) : (
                 <>
                     <View style={styles.button}>
-                        <Button title="Log in" onPress={() => navigation.navigate("Login")} />
+                        <ActionButton
+                            title="Log in"
+                            onPress={() => navigation.navigate("Login")}
+                            variant="secondary"
+                        />
                     </View>
                     <View style={styles.button}>
-                        <Button title="Register" onPress={() => navigation.navigate("Register")} />
+                        <ActionButton
+                            title="Register"
+                            onPress={() => navigation.navigate("Register")}
+                            variant="secondary"
+                        />
                     </View>
                 </>
             )}
@@ -51,7 +62,13 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    title: { fontSize: 28, fontWeight: "bold", marginBottom: 12 },
-    text: { fontSize: 16, marginBottom: 24 },
-    button: { marginBottom: 12 },
+    title: {
+        fontSize: 32,
+        lineHeight: 39,
+        fontWeight: "800",
+        color: COLORS.primaryDark,
+        marginBottom: 12,
+    },
+    text: { fontSize: 17, lineHeight: 25, color: COLORS.muted, marginBottom: 28 },
+    button: { marginBottom: 12, minHeight: 44, justifyContent: "center" },
 });

@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, Text, View, StyleSheet } from "react-native";
 import { CATEGORIES } from "../constants/categories";
+import COLORS from "../constants/colors";
 
 // Category picker used by both the recipe list (filter) and the recipe form.
 // - showAll: adds an "All" chip that selects nothing (filter mode)
@@ -46,21 +47,21 @@ export default function CategoryChips({ value, onChange, showAll = false, wrap =
 }
 
 const styles = StyleSheet.create({
-    row: { paddingHorizontal: 16, paddingBottom: 8 },
+    row: { paddingHorizontal: 18, paddingBottom: 12 },
     wrap: { flexDirection: "row", flexWrap: "wrap" },
     chip: {
         minHeight: 44,
         justifyContent: "center",
-        paddingHorizontal: 14,
-        paddingVertical: 10,
+        paddingHorizontal: 16,
+        paddingVertical: 9,
         borderRadius: 20,
-        backgroundColor: "#fff",
+        backgroundColor: COLORS.surface,
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: COLORS.border,
         marginRight: 8,
         marginBottom: 8,
     },
-    chipSelected: { backgroundColor: "#222", borderColor: "#222" },
-    chipText: { fontSize: 14, color: "#222" },
-    chipTextSelected: { color: "#fff" },
+    chipSelected: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+    chipText: { fontSize: 14, fontWeight: "600", color: COLORS.text },
+    chipTextSelected: { color: COLORS.surface },
 });

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Text, Button, ActivityIndicator, Alert, View, StyleSheet } from "react-native";
+import { Text, ActivityIndicator, Alert, View, StyleSheet } from "react-native";
 import { register } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import ScreenContainer from "../components/ScreenContainer";
 import FormInput from "../components/FormInput";
+import ActionButton from "../components/ActionButton";
+import COLORS from "../constants/colors";
 
 export default function RegisterScreen({ navigation }) {
     const { signIn } = useAuth();
@@ -67,13 +69,14 @@ export default function RegisterScreen({ navigation }) {
             {submitting ? (
                 <ActivityIndicator size="large" accessibilityLabel="Creating account" />
             ) : (
-                <Button title="Register" onPress={handleRegister} />
+                <ActionButton title="Register" onPress={handleRegister} />
             )}
 
             <View style={styles.link}>
-                <Button
+                <ActionButton
                     title="Already have an account? Log in"
                     onPress={() => navigation.navigate("Login")}
+                    variant="secondary"
                 />
             </View>
         </ScreenContainer>
@@ -81,7 +84,13 @@ export default function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    title: { fontSize: 28, fontWeight: "bold", marginBottom: 24 },
-    error: { color: "#b00020", marginBottom: 12 },
-    link: { marginTop: 16 },
+    title: {
+        fontSize: 30,
+        lineHeight: 37,
+        fontWeight: "800",
+        color: COLORS.primaryDark,
+        marginBottom: 26,
+    },
+    error: { color: COLORS.danger, lineHeight: 22, marginBottom: 14 },
+    link: { marginTop: 18, minHeight: 44, justifyContent: "center" },
 });

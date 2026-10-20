@@ -1,4 +1,6 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import ActionButton from "./ActionButton";
+import COLORS from "../constants/colors";
 
 export default function ErrorView({ message, onRetry }) {
     return (
@@ -6,12 +8,24 @@ export default function ErrorView({ message, onRetry }) {
             <Text style={styles.text} accessibilityRole="alert">
                 {message}
             </Text>
-            {onRetry ? <Button title="Try again" onPress={onRetry} /> : null}
+            {onRetry ? <ActionButton title="Try again" onPress={onRetry} /> : null}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-    text: { fontSize: 16, color: "#b00020", textAlign: "center", marginBottom: 16 },
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 28,
+        backgroundColor: COLORS.background,
+    },
+    text: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: COLORS.danger,
+        textAlign: "center",
+        marginBottom: 20,
+    },
 });

@@ -3,7 +3,6 @@ import {
     View,
     Text,
     TextInput,
-    Button,
     ScrollView,
     ActivityIndicator,
     Alert,
@@ -14,6 +13,8 @@ import {
 import { createRecipe, updateRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
 import CategoryChips from "../components/CategoryChips";
+import ActionButton from "../components/ActionButton";
+import COLORS from "../constants/colors";
 
 export default function RecipeFormScreen({ navigation, route }) {
     const { token } = useAuth();
@@ -134,7 +135,7 @@ export default function RecipeFormScreen({ navigation, route }) {
                 {submitting ? (
                     <ActivityIndicator size="large" />
                 ) : (
-                    <Button
+                    <ActionButton
                         title={editing ? "Save changes" : "Create recipe"}
                         onPress={handleSubmit}
                     />
@@ -145,17 +146,34 @@ export default function RecipeFormScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    flex: { flex: 1 },
-    container: { padding: 24, paddingBottom: 48 },
-    label: { fontSize: 16, fontWeight: "bold", marginBottom: 6, marginTop: 12 },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-        backgroundColor: "#fff",
+    flex: { flex: 1, backgroundColor: COLORS.background },
+    container: {
+        width: "100%",
+        maxWidth: 560,
+        alignSelf: "center",
+        paddingHorizontal: 20,
+        paddingTop: 12,
+        paddingBottom: 40,
     },
-    multiline: { minHeight: 120, textAlignVertical: "top" },
-    error: { color: "#b00020", marginVertical: 12 },
+    label: {
+        fontSize: 15,
+        lineHeight: 21,
+        fontWeight: "700",
+        color: COLORS.text,
+        marginBottom: 8,
+        marginTop: 16,
+    },
+    input: {
+        minHeight: 52,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        borderRadius: 14,
+        paddingHorizontal: 15,
+        paddingVertical: 13,
+        fontSize: 16,
+        color: COLORS.text,
+        backgroundColor: COLORS.surface,
+    },
+    multiline: { minHeight: 128, textAlignVertical: "top" },
+    error: { color: COLORS.danger, lineHeight: 22, marginVertical: 14 },
 });

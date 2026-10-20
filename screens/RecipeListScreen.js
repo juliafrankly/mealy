@@ -6,6 +6,7 @@ import RecipeCard from "../components/RecipeCard";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import EmptyView from "../components/EmptyView";
+import COLORS from "../constants/colors";
 
 export default function RecipeListScreen({ navigation }) {
     const [recipes, setRecipes] = useState([]);
@@ -125,17 +126,21 @@ export default function RecipeListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#f7f7f7" },
+    container: { flex: 1, backgroundColor: COLORS.background },
     search: {
-        backgroundColor: "#fff",
+        minHeight: 52,
+        backgroundColor: COLORS.surface,
         borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
+        borderColor: COLORS.border,
+        borderRadius: 16,
+        paddingHorizontal: 16,
+        paddingVertical: 13,
         fontSize: 16,
-        margin: 16,
-        marginBottom: 8,
+        marginHorizontal: 18,
+        marginTop: 16,
+        marginBottom: 12,
+        color: COLORS.text,
     },
     content: { flex: 1 },
-    list: { padding: 16, flexGrow: 1 },
+    list: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24, flexGrow: 1 },
 });
