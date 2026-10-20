@@ -1,4 +1,14 @@
 require("dotenv").config();
+
+// Fail early with a clear message if the environment is not set up
+const missing = ["DATABASE_URL", "JWT_SECRET"].filter((name) => !process.env[name]);
+if (missing.length > 0) {
+    console.error(
+        `Missing environment variables: ${missing.join(", ")}. Copy .env.example to .env and fill it in.`
+    );
+    process.exit(1);
+}
+
 const express = require("express");
 const cors = require("cors");
 
