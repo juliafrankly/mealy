@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    FlatList,
-    ScrollView,
-    Pressable,
-    StyleSheet,
-} from "react-native";
+import { View, TextInput, FlatList, StyleSheet } from "react-native";
 import { getRecipes } from "../api/recipes";
-import { CATEGORIES } from "../constants/categories";
+import CategoryChips from "../components/CategoryChips";
 import RecipeCard from "../components/RecipeCard";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
@@ -23,15 +15,19 @@ export default function RecipeListScreen({ navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [reloadKey, setReloadKey] = useState(0);
+    // Set when the list reloads because the screen got focus again.
+    // A silent reload keeps the old list visible and never shows a spinner.
+    const silentReloadRef = useRef(false);
+    const isFirstFocus = useRef(true);
 
     // Reload the list when the user returns to this screen (e.g. after deleting)
-    const isFirstFocus = useRef(true);
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
             if (isFirstFocus.current) {
                 isFirstFocus.current = false;
                 return;
             }
+            silentReloadRef.current = true;
             setReloadKey((k) => k + 1);
         });
         return unsubscribe;
@@ -45,18 +41,21 @@ export default function RecipeListScreen({ navigation }) {
 
     useEffect(() => {
         let cancelled = false;
+        const silent = silentReloadRef.current;
+        silentReloadRef.current = false;
 
         async function loadRecipes() {
-            setLoading(true);
+            if (!silent) setLoading(true);
             setError("");
             try {
                 const data = await getRecipes({ search: debouncedSearch, category });
                 if (!cancelled) setRecipes(data);
             } catch (err) {
                 console.error(err);
-                if (!cancelled) setError(err.message);
+                // A failed silent reload keeps showing the list we already have
+                if (!cancelled && !silent) setError(err.message);
             } finally {
-                if (!cancelled) setLoading(false);
+                if (!cancelled && !silent) setLoading(false);
             }
         }
 
@@ -118,33 +117,7 @@ export default function RecipeListScreen({ navigation }) {
                 accessibilityLabel="Search recipes by title"
             />
 
-            <View>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.chips}
-                >
-                    {[null, ...CATEGORIES].map((item) => {
-                        const selected = item === category;
-                        return (
-                            <Pressable
-                                key={item ?? "all"}
-                                style={[styles.chip, selected && styles.chipSelected]}
-                                onPress={() => setCategory(item)}
-                                accessibilityRole="button"
-                                accessibilityState={{ selected }}
-                                accessibilityLabel={`Category ${item ?? "All"}`}
-                            >
-                                <Text
-                                    style={[styles.chipText, selected && styles.chipTextSelected]}
-                                >
-                                    {item ?? "All"}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
-                </ScrollView>
-            </View>
+            <CategoryChips value={category} onChange={setCategory} showAll />
 
             <View style={styles.content}>{renderContent()}</View>
         </View>
@@ -163,21 +136,6 @@ const styles = StyleSheet.create({
         margin: 16,
         marginBottom: 8,
     },
-    chips: { paddingHorizontal: 16, paddingBottom: 8 },
-    chip: {
-        minHeight: 44,
-        justifyContent: "center",
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        borderRadius: 20,
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        marginRight: 8,
-    },
-    chipSelected: { backgroundColor: "#222", borderColor: "#222" },
-    chipText: { fontSize: 14, color: "#222" },
-    chipTextSelected: { color: "#fff" },
     content: { flex: 1 },
     list: { padding: 16, flexGrow: 1 },
 });
