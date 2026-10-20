@@ -5,7 +5,6 @@ import {
     TextInput,
     Button,
     ScrollView,
-    Pressable,
     ActivityIndicator,
     Alert,
     KeyboardAvoidingView,
@@ -14,7 +13,7 @@ import {
 } from "react-native";
 import { createRecipe, updateRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
-import { CATEGORIES } from "../constants/categories";
+import CategoryChips from "../components/CategoryChips";
 
 export default function RecipeFormScreen({ navigation, route }) {
     const { token } = useAuth();
@@ -104,28 +103,7 @@ export default function RecipeFormScreen({ navigation, route }) {
                 />
 
                 <Text style={styles.label}>Category</Text>
-                <View style={styles.chips}>
-                    {CATEGORIES.map((item) => {
-                        const selected = item === category;
-                        return (
-                            <Pressable
-                                key={item}
-                                style={[styles.chip, selected && styles.chipSelected]}
-                                // Tap the selected category again to clear it
-                                onPress={() => setCategory(selected ? null : item)}
-                                accessibilityRole="button"
-                                accessibilityState={{ selected }}
-                                accessibilityLabel={`Category ${item}`}
-                            >
-                                <Text
-                                    style={[styles.chipText, selected && styles.chipTextSelected]}
-                                >
-                                    {item}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
-                </View>
+                <CategoryChips value={category} onChange={setCategory} wrap />
 
                 <Text style={styles.label}>Ingredients * (one per line)</Text>
                 <TextInput
@@ -179,21 +157,5 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     multiline: { minHeight: 120, textAlignVertical: "top" },
-    chips: { flexDirection: "row", flexWrap: "wrap" },
-    chip: {
-        minHeight: 44,
-        justifyContent: "center",
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        borderRadius: 20,
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        marginRight: 8,
-        marginBottom: 8,
-    },
-    chipSelected: { backgroundColor: "#222", borderColor: "#222" },
-    chipText: { fontSize: 14, color: "#222" },
-    chipTextSelected: { color: "#fff" },
     error: { color: "#b00020", marginVertical: 12 },
 });
