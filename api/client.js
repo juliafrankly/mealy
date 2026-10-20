@@ -1,5 +1,7 @@
 import { API_URL } from "../constants/config";
 
+const REQUEST_TIMEOUT_MS = 10000;
+
 export class ApiError extends Error {
     constructor(message, status) {
         super(message);
@@ -20,19 +22,32 @@ export async function apiRequest(path, { method = "GET", body, token } = {}) {
     if (body) headers["Content-Type"] = "application/json";
     if (token) headers.Authorization = `Bearer ${token}`;
 
+    // Give up if the server does not answer, instead of spinning forever
+    const controller = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+    }, REQUEST_TIMEOUT_MS);
+
     let response;
     try {
         response = await fetch(`${API_URL}${path}`, {
             method,
             headers,
             body: body ? JSON.stringify(body) : undefined,
+            signal: controller.signal,
         });
     } catch (err) {
         console.error(err);
         throw new ApiError(
-            "Could not reach the server. Check your connection and try again.",
+            timedOut
+                ? "The server took too long to respond. Please try again."
+                : "Could not reach the server. Check your connection and try again.",
             0
         );
+    } finally {
+        clearTimeout(timer);
     }
 
     if (response.status === 204) return null;
