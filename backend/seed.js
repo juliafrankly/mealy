@@ -251,7 +251,7 @@ const RECIPES = [
         title: "Creamy Rice Pudding",
         description: "Warm, comforting and lightly spiced.",
         category: "Dessert",
-        image_url: "https://themodernnonna.com/wp-content/uploads/2025/01/DSC04749.jpg",
+        image_url: "https://www.theroastedroot.net/wp-content/uploads/2026/04/dairy-free-rice-pudding-6.jpg",
         ingredients: "1.5 dl short grain rice\n8 dl milk\n2 tbsp sugar\n1 tsp vanilla sugar\nCinnamon",
         instructions:
             "Simmer the rice with milk, sugar and vanilla sugar for about 35 minutes, stirring often. Serve warm with cinnamon.",
