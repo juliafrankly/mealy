@@ -13,9 +13,17 @@ const SELECT_RECIPE = `
   JOIN users u ON u.id = r.user_id
 `;
 
-// GET /api/recipes?search=pasta&category=Dinner&user_id=1&ids=1,2,3
+const SORT_OPTIONS = {
+    newest: "r.created_at DESC, r.id DESC",
+    oldest: "r.created_at ASC, r.id ASC",
+    title_asc: "LOWER(r.title) ASC, r.id ASC",
+    title_desc: "LOWER(r.title) DESC, r.id DESC",
+};
+
+// GET /api/recipes?search=pasta&category=Dinner&sort=title_asc&limit=10&offset=0
 router.get("/", async (req, res) => {
-    const { search, category, user_id, ids } = req.query;
+    const { search, category, user_id, ids, sort = "newest", limit, offset } =
+        req.query;
     const conditions = [];
     const values = [];
 
@@ -45,11 +53,36 @@ router.get("/", async (req, res) => {
         conditions.push(`r.id = ANY($${values.length}::int[])`);
     }
 
+    if (!Object.hasOwn(SORT_OPTIONS, sort)) {
+        return res.status(400).json({ message: "Invalid sort option." });
+    }
+    const orderBy = SORT_OPTIONS[sort];
+
+    // Paging is optional: without limit, all matching recipes are returned
+    let paging = "";
+    if (limit !== undefined) {
+        const limitNumber = Number(limit);
+        const offsetNumber = Number(offset ?? 0);
+        if (
+            !Number.isInteger(limitNumber) ||
+            limitNumber < 1 ||
+            limitNumber > 100 ||
+            !Number.isInteger(offsetNumber) ||
+            offsetNumber < 0
+        ) {
+            return res.status(400).json({ message: "Invalid paging options." });
+        }
+        values.push(limitNumber);
+        const limitParam = values.length;
+        values.push(offsetNumber);
+        paging = `LIMIT $${limitParam} OFFSET $${values.length}`;
+    }
+
     const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
     try {
         const result = await pool.query(
-            `${SELECT_RECIPE} ${where} ORDER BY r.created_at DESC`,
+            `${SELECT_RECIPE} ${where} ORDER BY ${orderBy} ${paging}`,
             values
         );
         res.json(result.rows);
