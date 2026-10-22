@@ -25,7 +25,7 @@ The app talks to its own REST API, included in the `backend/` folder. It is buil
 
 ## Main features
 
-- Home screen, navigation with React Navigation
+- Bottom tab bar for the main sections (Home, Recipes, Create, Profile or Log in), built with React Navigation
 - Register, log in and log out
 - Recipe list with search and category filter
 - Recipe details with ingredients and instructions
