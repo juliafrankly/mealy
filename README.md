@@ -21,6 +21,7 @@ The app talks to its own REST API, included in the `backend/` folder. It is buil
 | PUT | `/api/recipes/:id/favorite` | Yes | Save a recipe as favorite |
 | DELETE | `/api/recipes/:id/favorite` | Yes | Remove a favorite |
 | GET | `/api/favorites` | Yes | Ids of the logged-in user's favorites |
+| GET | `/api/recipes` | No | List recipes. Optional query: `search`, `category`, `user_id`, `ids`, `sort` (`newest`, `oldest`, `title_asc`, `title_desc`), `limit`, `offset` |
 
 ## Main features
 
@@ -123,8 +124,8 @@ To try the app, log in with the demo user or register a new account, then create
 ## Known issues and limitations
 
 - The backend must run on the same computer and network as Expo. `npx expo start --tunnel` does not work, since the app cannot reach the backend through the tunnel.
-- The recipe list loads all recipes at once (no pagination).
 - Ingredients are stored as plain text, one per line.
+- "My recipes" and "Favorites" load all their recipes at once (no paging).
 - The app needs the server to show recipes. Only the favorite ids are cached locally, not the recipes themselves, so there is no offline mode.
 - Tested with Expo Go on a Google Pixel 9 Pro. Not tested on web.
 - Images cannot be uploaded in the app. Only the demo recipes can have images, set with `image_url` in `backend/seed.js`.
