@@ -75,7 +75,7 @@ export default function RegisterScreen({ navigation }) {
             <View style={styles.link}>
                 <ActionButton
                     title="Already have an account? Log in"
-                    onPress={() => navigation.navigate("Login")}
+                    onPress={() => navigation.navigate("Tabs", { screen: "Login" })}
                     variant="secondary"
                 />
             </View>
