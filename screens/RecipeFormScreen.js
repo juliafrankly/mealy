@@ -132,14 +132,16 @@ export default function RecipeFormScreen({ navigation, route }) {
                     </Text>
                 ) : null}
 
-                {submitting ? (
-                    <ActivityIndicator size="large" />
-                ) : (
-                    <ActionButton
-                        title={editing ? "Save changes" : "Create recipe"}
-                        onPress={handleSubmit}
-                    />
-                )}
+                <View style={styles.submitButton}>
+                    {submitting ? (
+                        <ActivityIndicator size="large" />
+                    ) : (
+                        <ActionButton
+                            title={editing ? "Save changes" : "Create recipe"}
+                            onPress={handleSubmit}
+                        />
+                    )}
+                </View>
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -176,4 +178,5 @@ const styles = StyleSheet.create({
     },
     multiline: { minHeight: 128, textAlignVertical: "top" },
     error: { color: COLORS.danger, lineHeight: 22, marginVertical: 14 },
+    submitButton: { marginTop: 16 },
 });

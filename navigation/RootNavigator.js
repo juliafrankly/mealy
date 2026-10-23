@@ -1,6 +1,7 @@
 import { ActivityIndicator, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { PlatformPressable } from "@react-navigation/elements";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import COLORS from "../constants/colors";
@@ -41,6 +42,26 @@ function MainTabs() {
             screenOptions={{
                 tabBarActiveTintColor: COLORS.primaryDark,
                 tabBarInactiveTintColor: COLORS.muted,
+                tabBarInactiveBackgroundColor: COLORS.surfaceSoft,
+                tabBarButton: (props) => (
+                    <PlatformPressable
+                        {...props}
+                        pressOpacity={0.96}
+                        pressColor="rgba(47, 107, 79, 0.10)"
+                    />
+                ),
+                tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+                tabBarItemStyle: {
+                    marginHorizontal: 5,
+                    marginVertical: 5,
+                    borderRadius: 18,
+                },
+                tabBarStyle: {
+                    backgroundColor: COLORS.surfaceSoft,
+                    borderTopColor: COLORS.border,
+                    borderTopWidth: 1,
+                    paddingTop: 4,
+                },
                 tabBarHideOnKeyboard: true,
             }}
         >

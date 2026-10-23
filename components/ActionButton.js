@@ -4,6 +4,7 @@ import COLORS from "../constants/colors";
 export default function ActionButton({ title, onPress, variant = "primary" }) {
     const secondary = variant === "secondary";
     const danger = variant === "danger";
+    const lightOutline = variant === "lightOutline";
 
     return (
         <Pressable
@@ -11,6 +12,7 @@ export default function ActionButton({ title, onPress, variant = "primary" }) {
                 styles.button,
                 secondary && styles.secondaryButton,
                 danger && styles.dangerButton,
+                lightOutline && styles.lightOutlineButton,
                 pressed && styles.pressed,
             ]}
             onPress={onPress}
@@ -22,6 +24,7 @@ export default function ActionButton({ title, onPress, variant = "primary" }) {
                     styles.label,
                     secondary && styles.secondaryLabel,
                     danger && styles.dangerLabel,
+                    lightOutline && styles.lightOutlineLabel,
                 ]}
             >
                 {title}
@@ -46,6 +49,12 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.surfaceSoft,
     },
     dangerButton: { backgroundColor: COLORS.danger },
+    lightOutlineButton: {
+        borderWidth: 2,
+        borderColor: COLORS.surface,
+        borderRadius: 28,
+        backgroundColor: "transparent",
+    },
     label: {
         color: COLORS.surface,
         fontSize: 16,
@@ -55,5 +64,6 @@ const styles = StyleSheet.create({
     },
     secondaryLabel: { color: COLORS.primaryDark },
     dangerLabel: { color: COLORS.surface },
+    lightOutlineLabel: { color: COLORS.surface },
     pressed: { opacity: 0.78 },
 });

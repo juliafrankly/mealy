@@ -45,6 +45,7 @@ export default function HomeScreen({ navigation }) {
                             <ActionButton
                                 title="Browse recipes"
                                 onPress={() => navigation.navigate("RecipeList")}
+                                variant="lightOutline"
                             />
                         </View>
 
