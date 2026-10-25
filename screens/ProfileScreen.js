@@ -1,16 +1,18 @@
 import { View, Text, Alert, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
+import { useSuccessModal } from "../context/SuccessModalContext";
 import ScreenContainer from "../components/ScreenContainer";
 import ActionButton from "../components/ActionButton";
 import COLORS from "../constants/colors";
 
 export default function ProfileScreen({ navigation }) {
     const { user, signOut } = useAuth();
+    const showSuccess = useSuccessModal();
 
     const handleLogout = async () => {
         try {
             await signOut();
-            Alert.alert("Logged out", "You have been logged out.");
+            showSuccess("Logged out", "You have been logged out.");
         } catch (err) {
             console.error(err);
             Alert.alert("Could not log out", "Something went wrong. Please try again.");

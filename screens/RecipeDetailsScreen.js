@@ -12,6 +12,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getRecipe, deleteRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
+import {
+    useConfirmationModal,
+    useSuccessModal,
+} from "../context/SuccessModalContext";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import RecipeImage from "../components/RecipeImage";
@@ -31,6 +35,8 @@ export default function RecipeDetailsScreen({ route, navigation }) {
     const { id } = route.params;
     const { token, user } = useAuth();
     const { isFavorite, toggleFavorite } = useFavorites();
+    const showConfirmation = useConfirmationModal();
+    const showSuccess = useSuccessModal();
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -97,7 +103,7 @@ export default function RecipeDetailsScreen({ route, navigation }) {
         setDeleting(true);
         try {
             await deleteRecipe(id, token);
-            Alert.alert("Recipe deleted", "Your recipe has been removed.");
+            showSuccess("Recipe deleted", "Your recipe has been removed.");
             navigation.goBack();
         } catch (err) {
             console.error(err);
@@ -107,13 +113,10 @@ export default function RecipeDetailsScreen({ route, navigation }) {
     };
 
     const handleDelete = () => {
-        Alert.alert(
+        showConfirmation(
             "Delete recipe",
             "Are you sure you want to delete this recipe? This cannot be undone.",
-            [
-                { text: "Cancel", style: "cancel" },
-                { text: "Delete", style: "destructive", onPress: confirmDelete },
-            ]
+            confirmDelete
         );
     };
 

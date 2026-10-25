@@ -15,6 +15,7 @@ import RecipeCard from "../components/RecipeCard";
 import LoadingView from "../components/LoadingView";
 import ErrorView from "../components/ErrorView";
 import EmptyView from "../components/EmptyView";
+import COLORS from "../constants/colors";
 
 const PAGE_SIZE = 10;
 
@@ -229,11 +230,11 @@ export default function RecipeListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#f7f7f7" },
+    container: { flex: 1, backgroundColor: COLORS.background },
     search: {
-        backgroundColor: "#fff",
+        backgroundColor: COLORS.surface,
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: COLORS.border,
         borderRadius: 8,
         padding: 12,
         fontSize: 16,

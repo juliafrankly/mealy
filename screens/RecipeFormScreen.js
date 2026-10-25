@@ -5,19 +5,20 @@ import {
     TextInput,
     ScrollView,
     ActivityIndicator,
-    Alert,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
 } from "react-native";
 import { createRecipe, updateRecipe } from "../api/recipes";
 import { useAuth } from "../context/AuthContext";
+import { useSuccessModal } from "../context/SuccessModalContext";
 import CategoryChips from "../components/CategoryChips";
 import ActionButton from "../components/ActionButton";
 import COLORS from "../constants/colors";
 
 export default function RecipeFormScreen({ navigation, route }) {
     const { token } = useAuth();
+    const showSuccess = useSuccessModal();
     // If a recipe is passed in, the form edits it. Otherwise it creates a new one.
     const existing = route.params?.recipe;
     const editing = Boolean(existing);
@@ -53,7 +54,7 @@ export default function RecipeFormScreen({ navigation, route }) {
                     },
                     token
                 );
-                Alert.alert("Recipe updated", "Your changes have been saved.");
+                showSuccess("Recipe updated", "Your changes have been saved.");
                 navigation.goBack();
             } else {
                 const created = await createRecipe(
@@ -66,7 +67,7 @@ export default function RecipeFormScreen({ navigation, route }) {
                     },
                     token
                 );
-                Alert.alert("Recipe created", "Your recipe has been published.");
+                showSuccess("Recipe created", "Your recipe has been published.");
                 navigation.replace("RecipeDetails", { id: created.id });
             }
         } catch (err) {

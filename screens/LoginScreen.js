@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Text, ActivityIndicator, Alert, View, StyleSheet } from "react-native";
+import { Text, ActivityIndicator, View, StyleSheet } from "react-native";
 import { login } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import { useSuccessModal } from "../context/SuccessModalContext";
 import ScreenContainer from "../components/ScreenContainer";
 import FormInput from "../components/FormInput";
 import ActionButton from "../components/ActionButton";
@@ -9,6 +10,7 @@ import COLORS from "../constants/colors";
 
 export default function LoginScreen({ navigation }) {
     const { signIn } = useAuth();
+    const showSuccess = useSuccessModal();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -20,7 +22,7 @@ export default function LoginScreen({ navigation }) {
         try {
             const { token, user } = await login(email.trim(), password);
             await signIn(token, user);
-            Alert.alert("Logged in", `Welcome back, ${user.username}!`);
+            showSuccess("Logged in", `Welcome back, ${user.username}!`);
         } catch (err) {
             setError(err.message);
             setSubmitting(false);

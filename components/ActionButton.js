@@ -50,9 +50,14 @@ const styles = StyleSheet.create({
     },
     dangerButton: { backgroundColor: COLORS.danger },
     lightOutlineButton: {
+        width: 240,
+        height: 64,
+        alignSelf: "center",
+        paddingHorizontal: 20,
+        paddingVertical: 0,
         borderWidth: 2,
         borderColor: COLORS.surface,
-        borderRadius: 28,
+        borderRadius: 32,
         backgroundColor: "transparent",
     },
     label: {

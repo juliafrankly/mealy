@@ -42,6 +42,8 @@ function MainTabs() {
             screenOptions={{
                 tabBarActiveTintColor: COLORS.primaryDark,
                 tabBarInactiveTintColor: COLORS.muted,
+                sceneStyle: { backgroundColor: COLORS.background },
+                headerStyle: { backgroundColor: COLORS.background },
                 tabBarInactiveBackgroundColor: COLORS.surfaceSoft,
                 tabBarButton: (props) => (
                     <PlatformPressable
@@ -134,14 +136,26 @@ export default function RootNavigator() {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: COLORS.background,
+                }}
+            >
                 <ActivityIndicator size="large" />
             </View>
         );
     }
 
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                contentStyle: { backgroundColor: COLORS.background },
+                headerStyle: { backgroundColor: COLORS.background },
+            }}
+        >
             <Stack.Screen
                 name="Tabs"
                 component={MainTabs}
